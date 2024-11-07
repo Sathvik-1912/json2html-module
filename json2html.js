@@ -1,27 +1,29 @@
+// json2html.js
 export default function json2html(data) {
-    // Get all unique keys across all objects to use as table headers
-    const headers = ["Name", "Age", "Gender"];
+  const columns = new Set();
 
-    // Start building the HTML table with the specified data attribute
-    let html = <table data-user="vanaparthisathvik@gmail.com">;
-    
-    // Add table headers
-    html += <thead><tr>;
-    headers.forEach(header => {
-        html += <th>${header}</th>;
+  // Collect unique column names
+  data.forEach(item => Object.keys(item).forEach(key => columns.add(key)));
+
+  // Create table with data-user attribute
+  let html = '<table data-user="vanaparthisathvik@gmail.com">';
+  html += '<thead><tr>';
+
+  // Add headers
+  columns.forEach(column => {
+    html += `<th>${column}</th>`;
+  });
+  html += '</tr></thead><tbody>';
+
+  // Add rows
+  data.forEach(item => {
+    html += '<tr>';
+    columns.forEach(column => {
+      html += `<td>${item[column] || ''}</td>`;
     });
-    html += </tr></thead>;
-    
-    // Add table rows for each object in data
-    html += <tbody>;
-    data.forEach(row => {
-        html += <tr>;
-        headers.forEach(header => {
-            html += <td>${row[header] || ""}</td>;
-        });
-        html += </tr>;
-    });
-    html += </tbody></table>;
-    
-    return html;
+    html += '</tr>';
+  });
+
+  html += '</tbody></table>';
+  return html;
 }
